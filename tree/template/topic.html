@@ -7,9 +7,8 @@
 
 {% block content %}
 
-{% for child in node.children %}
-<br>
-<p> <a href="{{child.slug}}" > {{child.title}} </a> </p>
-{% endfor %}
+  {% for child in node.children %}
+    <p> <a href="{{addr}}/{{child.slug}}" > {{child.title}} </a> </p>
+  {% endfor %}
 
 {% endblock %}

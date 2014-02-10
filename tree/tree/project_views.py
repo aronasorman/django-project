@@ -2,37 +2,33 @@ import json
 
 import django
 from django.conf import settings
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseNotFound
 from django.shortcuts import render
 
 
 def load(request, addr):
-    with open('json1.json', 'r') as json1_file:
-        json1_data = json.load(json1_file)
-        node = json1_data
-        check = 0
-        a = 0
-        lis = request.path.strip('/').split("/")
-        for tag in lis:
-            if check == 0:
-                check = 1
-                if node['slug'] == lis[-1]:
+
+    # break up the path into a list of individual slugs
+    slug_list = [slug for slug in addr.strip('/').split("/") if slug]
+
+    with open('json1.json', 'r') as json_file:
+
+        # load the JSON data, and embed it in a dummy root node to make later logic easier
+        node = {"children": [json.load(json_file)], "kind": "Topic", "title": "Content"}
+
+        # work our way through the slugs in the path, to find the desired node in the tree
+        for slug in slug_list:
+
+            # check each of the current node's children for a matching slug
+            for child in node.get("children", []):
+                if child["slug"] == slug:
+                    node = child
                     break
-            else:
-                    if node['slug'] == lis[a] and node['kind'] == 'Topic':
-                        b = a + 1
-                        for child in node['children']:
-                            if child['slug'] == lis[b]:
-                                node = child
-                                a = a + 1
-                                break
-                            else:
-                                continue
-        if node['slug'] == lis[-1]:
-            link = settings.MEDIA_URL + "styles.css"
-            if node['kind'] == 'Topic':
-                return render(request, 'parent.html', {'node': node, 'link': link})
-            else:
-                return render(request, 'child.html', {'node': node, 'link': link})
-        else:
-            return HttpResponse("Invalid Url")
+
+            # if we looked through all the children and didn't find a match, it's a 404
+            if node['slug'] != slug:
+                return HttpResponseNotFound("Path not found")
+
+
+        # render the template appropriate to the selected node's kind
+        return render(request, '%s.html' % node['kind'].lower(), {'node': node, 'addr': addr})

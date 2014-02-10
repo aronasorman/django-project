@@ -1,23 +1,21 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"  
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
 "http://www.w3.org/TR/html4/loose.dtd">
 
-<html> 
-<head>
- 
-<link rel="stylesheet" type="text/css" href = "{{ link }}" >
-</head>
-<title>{% block title %} {% endblock %}
-</title>
+<html>
+  <head>
+
+    <link rel="stylesheet" type="text/css" href = "{{ link }}" >
+  </head>
+  <title>{% block title %} {% endblock %}
+  </title>
 
 
-<body>
+  <body>
 
-<h1> 
-{% block head %} {% endblock %} </h1> 
+    <h1> {% block head %}{% endblock %} </h1>
 
-{% block content %} {% endblock %}
+    {% block content %}{% endblock %}
 
-</body>
+  </body>
 
 </html>
-
