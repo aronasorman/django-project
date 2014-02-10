@@ -31,4 +31,4 @@ def load(request, addr):
 
 
         # render the template appropriate to the selected node's kind
-        return render(request, '%s.html' % node['kind'].lower(), {'node': node, 'addr': addr})
+        return render(request, '%s.html' % node['kind'].lower(), {'node': node, 'addr': addr })
